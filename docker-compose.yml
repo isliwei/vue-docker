@@ -1,0 +1,32 @@
+version: '3'
+
+networks:
+  frontend:
+    external: true
+
+services:                                      
+  docker_jenkins:                              # jenkins容器
+    user: root                                 # root权限
+    restart: always                            # 重启方式
+    image: jenkins/jenkins:lts                 # 使用的镜像
+    container_name: jenkins-vue                # 容器名称
+      
+    ports:                                     # 对外暴露的端口定义
+      - 9090:8080
+
+    volumes:                                   # 卷挂载路径
+      - /docker/jenkins_home/:/var/jenkins_home     # 挂载到容器内的jenkins_home目录
+      - /home/docker-store:/home/docker-store
+  
+  docker_nginx:                            # nginx容器
+    restart: always
+    image: nginx
+    container_name: nginx-vue
+    
+    ports:
+      - 80:80
+
+    volumes:
+      - /home/docker-store/nginxconf/nginx.conf:/etc/nginx/nginx.conf
+      - /home/docker-store/html:/usr/share/nginx/html
+     
